@@ -7,7 +7,7 @@ sudo apt-get update  && sudo apt-get -y upgrade
 # Give 'node' user access to 'node_modules' folder
 sudo chown node node_modules
 
-# Uninstall globally installed PNPM (appropriate version will be installed with corepack)
+# Uninstall globally installed PNPM (required version will be reinstalled with corepack)
 npm uninstall -g pnpm
 
 # Prevent corepack from prompting user before downloading PNPM 

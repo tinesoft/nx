@@ -71,7 +71,11 @@ If you open the repo in [Github Codespace](https://github.com/features/codespace
 After cloning the project to your machine, to install the dependencies, run:
 
 ```bash
-pnpm i
+pnpm install
+
+// or, prefer
+
+pnpm install --frozen-lockfile // if you haven't changed any dependency
 ```
 
 To build all the packages, run:

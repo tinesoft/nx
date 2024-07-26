@@ -1,0 +1,14 @@
+# Starting from a base image that already contains GLIBC v2.33 or higher (required by Nx)
+# Try a more recent distribution, if your are having build issues related to GLIBC version
+# Here we use 'bookworm', which is based on `Debian-12`, which comes with `GLIBC v2.36` pre-installed
+# (Nx tools currenlty requires `GLIBC v2.33` or higher)
+FROM mcr.microsoft.com/devcontainers/typescript-node:20-bookworm
+
+# Define ARG for glibc version
+ARG RUST_VERSION=2.33
+
+# Update the underlying (Debian) OS, to make sure we have the latest security patches and libraries like 'GLIBC' 
+RUN sudo apt-get update  && sudo apt-get -y upgrade
+
+# Update pnpm
+RUN npm install -g pnpm@8.15.7
