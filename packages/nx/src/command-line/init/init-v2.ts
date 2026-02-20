@@ -557,15 +557,14 @@ export async function detectPlugins(
     detectedPlugins.add('@nx/dotnet');
   }
 
-  let mvnwFiles = globWithWorkspaceContextSync(process.cwd(), [
-    'mvnw',
-    'mvnw.cmd',
-    'pom.xml',
-    '**/mvnw',
-    '**/mvnw.cmd',
-    '**/pom.xml',
-  ]);
-  if (mvnwFiles.length > 0) {
+  let mvnwFiles = ['mvnw', 'mvnw.cmd', 'pom.xml'].concat(
+    globWithWorkspaceContextSync(process.cwd(), [
+      '**/mvnw',
+      '**/mvnw.cmd',
+      '**/pom.xml',
+    ])
+  );
+  if (mvnwFiles.some((f) => existsSync(f))) {
     detectedPlugins.add('@nx/maven');
   }
 
