@@ -56,7 +56,11 @@ async function main() {
     (process.argv[2] === 'graph' && !workspace)
   ) {
     process.env.NX_DAEMON = 'false';
-    require('nx/src/command-line/nx-commands').commandsObject.argv;
+    // Use parseAsync so that async builders (e.g. the init command builder which
+    // handles --help manually) are fully resolved before the handler is invoked.
+    // With the plain `.argv` property access the handler could start running
+    // before the async builder's process.exit(0) call, making --help appear ignored.
+    await require('nx/src/command-line/nx-commands').commandsObject.parseAsync();
   } else {
     if (!daemonClient.enabled() && workspace !== null) {
       setupWorkspaceContext(workspace.dir);
