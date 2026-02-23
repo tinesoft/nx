@@ -539,13 +539,24 @@ export async function detectPlugins(
     }
   }
 
-  let gradlewFiles = ['gradlew', 'gradlew.bat'].concat(
+  let gradleFiles = [
+    'gradlew',
+    'gradlew.bat',
+    'build.gradle',
+    'build.gradle.kts',
+    'settings.gradle',
+    'settings.gradle.kts',
+  ].concat(
     globWithWorkspaceContextSync(process.cwd(), [
       '**/gradlew',
       '**/gradlew.bat',
+      '**/build.gradle',
+      '**/build.gradle.kts',
+      '**/settings.gradle',
+      '**/settings.gradle.kts',
     ])
   );
-  if (gradlewFiles.some((f) => existsSync(f))) {
+  if (gradleFiles.some((f) => existsSync(f))) {
     detectedPlugins.add('@nx/gradle');
   }
 
@@ -557,15 +568,14 @@ export async function detectPlugins(
     detectedPlugins.add('@nx/dotnet');
   }
 
-  let mvnwFiles = globWithWorkspaceContextSync(process.cwd(), [
-    'mvnw',
-    'mvnw.cmd',
-    'pom.xml',
-    '**/mvnw',
-    '**/mvnw.cmd',
-    '**/pom.xml',
-  ]);
-  if (mvnwFiles.length > 0) {
+  let mvnwFiles = ['mvnw', 'mvnw.cmd', 'pom.xml'].concat(
+    globWithWorkspaceContextSync(process.cwd(), [
+      '**/mvnw',
+      '**/mvnw.cmd',
+      '**/pom.xml',
+    ])
+  );
+  if (mvnwFiles.some((f) => existsSync(f))) {
     detectedPlugins.add('@nx/maven');
   }
 
