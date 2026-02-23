@@ -145,4 +145,103 @@ describe('detectPlugins', () => {
       expect(result.plugins).not.toContain('@nx/maven');
     });
   });
+
+  describe('Gradle detection', () => {
+    it('should detect @nx/gradle when gradlew exists at the root (existsSync fallback)', async () => {
+      mockExistsSync.mockImplementation(
+        (path: string) => path === 'gradlew' || path === 'package.json'
+      );
+      mockReadJsonFile.mockReturnValue({ name: 'test', version: '1.0.0' });
+
+      const result = await detectPlugins({}, null, false);
+
+      expect(result.plugins).toContain('@nx/gradle');
+    });
+
+    it('should detect @nx/gradle when gradlew.bat exists at the root (Windows - existsSync fallback)', async () => {
+      mockExistsSync.mockImplementation(
+        (path: string) => path === 'gradlew.bat' || path === 'package.json'
+      );
+      mockReadJsonFile.mockReturnValue({ name: 'test', version: '1.0.0' });
+
+      const result = await detectPlugins({}, null, false);
+
+      expect(result.plugins).toContain('@nx/gradle');
+    });
+
+    it('should detect @nx/gradle when build.gradle exists at the root (existsSync fallback)', async () => {
+      mockExistsSync.mockImplementation(
+        (path: string) => path === 'build.gradle' || path === 'package.json'
+      );
+      mockReadJsonFile.mockReturnValue({ name: 'test', version: '1.0.0' });
+
+      const result = await detectPlugins({}, null, false);
+
+      expect(result.plugins).toContain('@nx/gradle');
+    });
+
+    it('should detect @nx/gradle when build.gradle.kts exists at the root (existsSync fallback)', async () => {
+      mockExistsSync.mockImplementation(
+        (path: string) => path === 'build.gradle.kts' || path === 'package.json'
+      );
+      mockReadJsonFile.mockReturnValue({ name: 'test', version: '1.0.0' });
+
+      const result = await detectPlugins({}, null, false);
+
+      expect(result.plugins).toContain('@nx/gradle');
+    });
+
+    it('should detect @nx/gradle when settings.gradle exists at the root (existsSync fallback)', async () => {
+      mockExistsSync.mockImplementation(
+        (path: string) => path === 'settings.gradle' || path === 'package.json'
+      );
+      mockReadJsonFile.mockReturnValue({ name: 'test', version: '1.0.0' });
+
+      const result = await detectPlugins({}, null, false);
+
+      expect(result.plugins).toContain('@nx/gradle');
+    });
+
+    it('should detect @nx/gradle when settings.gradle.kts exists at the root (existsSync fallback)', async () => {
+      mockExistsSync.mockImplementation(
+        (path: string) =>
+          path === 'settings.gradle.kts' || path === 'package.json'
+      );
+      mockReadJsonFile.mockReturnValue({ name: 'test', version: '1.0.0' });
+
+      const result = await detectPlugins({}, null, false);
+
+      expect(result.plugins).toContain('@nx/gradle');
+    });
+
+    it('should detect @nx/gradle when build.gradle.kts is found via glob in subdirectories', async () => {
+      mockGlob.mockImplementation((cwd: string, patterns: string[]) => {
+        if (patterns.some((p) => p.includes('build.gradle.kts'))) {
+          return ['subproject/build.gradle.kts'];
+        }
+        return [];
+      });
+      mockExistsSync.mockImplementation(
+        (path: string) =>
+          path === 'subproject/build.gradle.kts' || path === 'package.json'
+      );
+      mockReadJsonFile.mockReturnValue({ name: 'test', version: '1.0.0' });
+
+      const result = await detectPlugins({}, null, false);
+
+      expect(result.plugins).toContain('@nx/gradle');
+    });
+
+    it('should not detect @nx/gradle when no Gradle files exist', async () => {
+      mockExistsSync.mockImplementation(
+        (path: string) => path === 'package.json'
+      );
+      mockGlob.mockReturnValue([]);
+      mockReadJsonFile.mockReturnValue({ name: 'test', version: '1.0.0' });
+
+      const result = await detectPlugins({}, null, false);
+
+      expect(result.plugins).not.toContain('@nx/gradle');
+    });
+  });
 });

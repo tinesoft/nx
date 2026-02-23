@@ -539,13 +539,24 @@ export async function detectPlugins(
     }
   }
 
-  let gradlewFiles = ['gradlew', 'gradlew.bat'].concat(
+  let gradleFiles = [
+    'gradlew',
+    'gradlew.bat',
+    'build.gradle',
+    'build.gradle.kts',
+    'settings.gradle',
+    'settings.gradle.kts',
+  ].concat(
     globWithWorkspaceContextSync(process.cwd(), [
       '**/gradlew',
       '**/gradlew.bat',
+      '**/build.gradle',
+      '**/build.gradle.kts',
+      '**/settings.gradle',
+      '**/settings.gradle.kts',
     ])
   );
-  if (gradlewFiles.some((f) => existsSync(f))) {
+  if (gradleFiles.some((f) => existsSync(f))) {
     detectedPlugins.add('@nx/gradle');
   }
 
